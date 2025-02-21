@@ -1,0 +1,18 @@
+[project]
+name = "dn-deobfuscator"
+version = "0.1.0"
+description = "Deobfuscator for Elektron DN2"
+authors = [{ name = "zerubeus", email = "zerubeus@gmail.com" }]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "dn-deobfuscator"
+version = "0.1.0"
+packages = [{ include = "dn_deobfuscator" }]
