@@ -2,8 +2,12 @@ import os
 import shutil
 import json
 import pytest
+import logging
 
 from dn_deobfuscator.app import extract_file_from_zip, extract_readable_text_from_binary
+
+
+logger = logging.getLogger(__name__)
 
 # Path to the test data directory containing the actual AUTOMATIC.dn2prj file
 TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
@@ -85,10 +89,10 @@ def test_extract_readable_text_from_binary():
     readable_text = extract_readable_text_from_binary(extracted_file_path)
 
     # Log the extracted text
-    print("\nExtracted readable text:")
-    print("-" * 40)
-    print(readable_text)
-    print("-" * 40)
+    logger.info("\nExtracted readable text:")
+    logger.info("-" * 40)
+    logger.info(readable_text)
+    logger.info("-" * 40)
 
     # Assert
     assert readable_text is not None

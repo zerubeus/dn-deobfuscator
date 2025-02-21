@@ -20,4 +20,6 @@ packages = [{ include = "dn_deobfuscator" }]
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
 black = "^25.1.0"
+flake8 = "^7.1.2"
+colorlog = "^6.9.0"
 
