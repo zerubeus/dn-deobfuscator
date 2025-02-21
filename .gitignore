@@ -177,3 +177,5 @@ cython_debug/
 .idea
 
 tests/unit/data/
+/tests/data/extracted_dn2prj/AUTOMATIC
+/tests/data/extracted_dn2prj/manifest.json
