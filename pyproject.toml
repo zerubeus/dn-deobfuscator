@@ -16,3 +16,8 @@ build-backend = "poetry.core.masonry.api"
 name = "dn-deobfuscator"
 version = "0.1.0"
 packages = [{ include = "dn_deobfuscator" }]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+black = "^25.1.0"
+
