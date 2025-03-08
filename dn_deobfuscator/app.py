@@ -1,17 +1,22 @@
 import os
 import shutil
+import argparse
+import sys
 
 
-def extract_file_from_zip(file_path: str, destination_dir: str) -> str:
+def extract_file_from_zip(file_path: str, destination_dir: str) -> tuple[str, str]:
     """
-    Extract files from a .dn2prj file by renaming it to .zip and extracting.
+    Extract files from a .dn2prj file by renaming it to .zip and extracting,
+    then convert the binary file to readable text.
 
     Args:
         file_path: Path to the .dn2prj file
         destination_dir: Base directory where files should be extracted
 
     Returns:
-        str: Path to the extracted binary file
+        tuple[str, str]: Tuple containing:
+            - Path to the extracted binary file
+            - Path to the generated text file
     """
     # Get the file extension to determine the extraction directory name
     file_ext = os.path.splitext(file_path)[1].lower()
@@ -46,12 +51,22 @@ def extract_file_from_zip(file_path: str, destination_dir: str) -> str:
                     break
             zip_ref.extractall(extract_subdir)
 
-        # Return path to the extracted binary file
-        if binary_name:
-            return os.path.join(extract_subdir, binary_name)
-        else:
-            # Fallback to the original behavior
-            return os.path.join(extract_subdir, base_name)
+        # Get path to the extracted binary file
+        binary_path = (
+            os.path.join(extract_subdir, binary_name)
+            if binary_name
+            else os.path.join(extract_subdir, base_name)
+        )
+
+        # Extract readable text from the binary
+        readable_text = extract_readable_text_from_binary(binary_path)
+
+        # Create text file path and save the extracted text
+        text_path = os.path.join(extract_subdir, f"{base_name}.txt")
+        with open(text_path, "w") as f:
+            f.write(readable_text)
+
+        return binary_path, text_path
     finally:
         # Clean up the temporary zip file
         os.remove(zip_path)
@@ -59,59 +74,62 @@ def extract_file_from_zip(file_path: str, destination_dir: str) -> str:
 
 def extract_readable_text_from_binary(binary_path: str) -> str:
     """
-    Extract readable text from a binary file using multiple techniques and
-    filtering.
+    Extract a comprehensive hex dump from a binary file, showing both hex values
+    and ASCII representation.
 
     Args:
         binary_path: Path to the binary file
 
     Returns:
-        str: Readable text from the binary file, filtered for meaningful content
+        str: Formatted hex dump with offset, hex values, and ASCII representation
     """
-    # Read the binary file as bytes
+
+    def get_printable_char(byte):
+        """Convert byte to printable character or dot if not printable."""
+        if 32 <= byte <= 126:  # printable ASCII range
+            return chr(byte)
+        return "."
+
+    # Read the binary file
     with open(binary_path, "rb") as f:
         binary_data = f.read()
 
-    # Try different approaches to extract text
-    text_chunks = []
+    # Format the output with 16 bytes per line
+    lines = []
+    for i in range(0, len(binary_data), 16):
+        # Get current chunk of 16 bytes
+        chunk = binary_data[i : i + 16]
 
-    # Attempt 1: Try decoding with 'ascii' and ignore errors
-    ascii_text = binary_data.decode("ascii", errors="ignore")
-    text_chunks.append(ascii_text)
+        # Format offset
+        offset = f"{i:08x}"
 
-    # Attempt 2: Try decoding with 'utf-16' and ignore errors
-    utf16_text = binary_data.decode("utf-16", errors="ignore")
-    text_chunks.append(utf16_text)
+        # Format hex values, padding with spaces if less than 16 bytes
+        hex_values = []
+        ascii_chars = []
 
-    # Combine all extracted text
-    combined_text = "\n".join(chunk for chunk in text_chunks if chunk.strip())
+        for j, byte in enumerate(chunk):
+            hex_values.append(f"{byte:02x}")
+            ascii_chars.append(get_printable_char(byte))
 
-    # Filter out non-printable characters except for whitespace
-    import string
-    import re
+            # Add extra space every 8 bytes for readability
+            if j == 7:
+                hex_values.append("")
 
-    # Define what we consider meaningful text
-    printable = set(string.printable)
+        # Pad hex values if less than 16 bytes
+        while len(hex_values) < 17:  # 16 bytes + 1 space
+            hex_values.append("  ")
+            ascii_chars.append(" ")
 
-    # First pass: Keep only printable characters
-    filtered_text = "".join(char for char in combined_text if char in printable)
+        # Combine all parts
+        hex_part = " ".join(hex_values)
+        ascii_part = "".join(ascii_chars)
+        lines.append(f"{offset}  {hex_part}  |{ascii_part}|")
 
-    # Second pass: Extract words that look meaningful
-    # Look for sequences of 3 or more letters/numbers
-    pattern = r"[A-Za-z0-9]{3,}"
-    words = re.findall(pattern, filtered_text)
+    # Add header
+    header = "Offset    00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F  |ASCII.............|"
+    separator = "-" * len(header)
 
-    # Third pass: Filter out common binary patterns
-    hex_chars = set("0123456789ABCDEFabcdef")
-    meaningful_words = [
-        word
-        for word in words
-        if not all(c in hex_chars for c in word)  # Skip hex-like strings
-        and not word.startswith("0x")  # Skip hex numbers
-        and not all(c.isdigit() for c in word)  # Skip pure numbers
-    ]
-
-    return "\n".join(meaningful_words)
+    return "\n".join([header, separator] + lines)
 
 
 def parse_digitone_preset(binary_path: str) -> dict:
@@ -335,3 +353,33 @@ def parse_digitone_preset(binary_path: str) -> dict:
     }
 
     return parameters
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Extract files from .dn2prj or .dn2pst files"
+    )
+    parser.add_argument(
+        "file_path", help="Path to the .dn2prj or .dn2pst file to extract"
+    )
+    parser.add_argument(
+        "-d",
+        "--destination",
+        default=".",
+        help="Destination directory for extracted files (default: current directory)",
+    )
+    args = parser.parse_args()
+
+    try:
+        extracted_path, text_path = extract_file_from_zip(
+            args.file_path, args.destination
+        )
+        print(f"Successfully extracted file to: {extracted_path}")
+        print(f"Text file saved to: {text_path}")
+    except Exception as e:
+        print(f"Error extracting file: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

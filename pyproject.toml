@@ -7,6 +7,8 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = []
 
+[project.scripts]
+dn = "dn_deobfuscator.app:main"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -22,4 +24,3 @@ pytest = "^8.3.4"
 black = "^25.1.0"
 flake8 = "^7.1.2"
 colorlog = "^6.9.0"
-

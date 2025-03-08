@@ -4,7 +4,7 @@ import json
 import pytest
 import logging
 
-from dn_deobfuscator.app import extract_file_from_zip, extract_readable_text_from_binary
+from dn_deobfuscator.app import extract_file_from_zip
 
 
 logger = logging.getLogger(__name__)
@@ -18,15 +18,17 @@ HIDDEN_TEARS_FILE = os.path.join(TEST_DATA_DIR, "hidden-tears.dn2pst")
 def get_test_data_dir_path():
     expected_extract_dir = os.path.join(TEST_DATA_DIR, "extracted_dn2prj")
     expected_binary_path = os.path.join(expected_extract_dir, "AUTOMATIC")
+    expected_text_path = os.path.join(expected_extract_dir, "AUTOMATIC.txt")
 
-    return expected_extract_dir, expected_binary_path
+    return expected_extract_dir, expected_binary_path, expected_text_path
 
 
 def get_hidden_tears_paths():
     expected_extract_dir = os.path.join(TEST_DATA_DIR, "extracted_dn2pst")
     expected_binary_path = os.path.join(expected_extract_dir, "HIDDEN TEARS")
+    expected_text_path = os.path.join(expected_extract_dir, "hidden-tears.txt")
 
-    return expected_extract_dir, expected_binary_path
+    return expected_extract_dir, expected_binary_path, expected_text_path
 
 
 @pytest.fixture(autouse=True)
@@ -67,16 +69,20 @@ def test_unzip_dn2prj_file():
     unzip AUTOMATIC.zip -d extracted_dn2prj
     """
     # Arrange
-    expected_extract_dir, expected_binary_path = get_test_data_dir_path()
+    expected_extract_dir, expected_binary_path, expected_text_path = (
+        get_test_data_dir_path()
+    )
 
     # Act
-    extracted_file_path = extract_file_from_zip(
+    binary_path, text_path = extract_file_from_zip(
         file_path=SAMPLE_FILE, destination_dir=TEST_DATA_DIR
     )
 
     # Assert
-    assert extracted_file_path == expected_binary_path
-    assert os.path.exists(extracted_file_path)
+    assert binary_path == expected_binary_path
+    assert os.path.exists(binary_path)
+    assert text_path == expected_text_path
+    assert os.path.exists(text_path)
 
     # Verify manifest.json exists and log its contents
     manifest_path = os.path.join(expected_extract_dir, "manifest.json")
@@ -94,32 +100,38 @@ def test_unzip_dn2prj_file():
 def test_extract_readable_text_from_binary():
     """Test that we can extract readable text from a binary file"""
     # Arrange
-    expected_extract_dir, expected_binary_path = get_test_data_dir_path()
+    expected_extract_dir, expected_binary_path, expected_text_path = (
+        get_test_data_dir_path()
+    )
 
     # Act
-    extracted_file_path = extract_file_from_zip(
+    binary_path, text_path = extract_file_from_zip(
         file_path=SAMPLE_FILE, destination_dir=TEST_DATA_DIR
     )
 
     # Assert
-    assert extracted_file_path == expected_binary_path
-    assert os.path.exists(extracted_file_path)
+    assert binary_path == expected_binary_path
+    assert os.path.exists(binary_path)
+    assert text_path == expected_text_path
+    assert os.path.exists(text_path)
 
     # Verify manifest.json exists and log its contents
     manifest_path = os.path.join(expected_extract_dir, "manifest.json")
     assert os.path.exists(manifest_path)
 
-    # Act
-    readable_text = extract_readable_text_from_binary(extracted_file_path)
+    # Read and verify the text file content
+    with open(text_path) as f:
+        text_content = f.read()
 
     # Log the extracted text
     logger.info("\nExtracted readable text:")
     logger.info("-" * 40)
-    logger.info(readable_text)
+    logger.info(text_content)
     logger.info("-" * 40)
 
     # Assert
-    assert readable_text is not None
+    assert text_content is not None
+    assert len(text_content) > 0
 
 
 def test_unzip_hidden_tears_file():
@@ -129,16 +141,20 @@ def test_unzip_hidden_tears_file():
     unzip hidden-tears.zip -d extracted_dn2prj
     """
     # Arrange
-    expected_extract_dir, expected_binary_path = get_hidden_tears_paths()
+    expected_extract_dir, expected_binary_path, expected_text_path = (
+        get_hidden_tears_paths()
+    )
 
     # Act
-    extracted_file_path = extract_file_from_zip(
+    binary_path, text_path = extract_file_from_zip(
         file_path=HIDDEN_TEARS_FILE, destination_dir=TEST_DATA_DIR
     )
 
     # Assert
-    assert extracted_file_path == expected_binary_path
-    assert os.path.exists(extracted_file_path)
+    assert binary_path == expected_binary_path
+    assert os.path.exists(binary_path)
+    assert text_path == expected_text_path
+    assert os.path.exists(text_path)
 
     # Verify manifest.json exists and log its contents
     manifest_path = os.path.join(expected_extract_dir, "manifest.json")
@@ -156,30 +172,35 @@ def test_unzip_hidden_tears_file():
 def test_extract_readable_text_from_hidden_tears():
     """Test that we can extract readable text from the hidden-tears binary file"""
     # Arrange
-    expected_extract_dir, expected_binary_path = get_hidden_tears_paths()
+    expected_extract_dir, expected_binary_path, expected_text_path = (
+        get_hidden_tears_paths()
+    )
 
     # Act - First extract the binary file
-    extracted_file_path = extract_file_from_zip(
+    binary_path, text_path = extract_file_from_zip(
         file_path=HIDDEN_TEARS_FILE, destination_dir=TEST_DATA_DIR
     )
 
     # Assert extraction was successful
-    assert extracted_file_path == expected_binary_path
-    assert os.path.exists(extracted_file_path)
+    assert binary_path == expected_binary_path
+    assert os.path.exists(binary_path)
+    assert text_path == expected_text_path
+    assert os.path.exists(text_path)
 
     # Verify manifest.json exists
     manifest_path = os.path.join(expected_extract_dir, "manifest.json")
     assert os.path.exists(manifest_path)
 
-    # Act - Extract readable text from the binary
-    readable_text = extract_readable_text_from_binary(extracted_file_path)
+    # Read and verify the text file content
+    with open(text_path) as f:
+        text_content = f.read()
 
     # Log the extracted text
     logger.info("\nExtracted readable text from hidden-tears:")
     logger.info("-" * 40)
-    logger.info(readable_text)
+    logger.info(text_content)
     logger.info("-" * 40)
 
     # Assert
-    assert readable_text is not None
-    assert len(readable_text) > 0
+    assert text_content is not None
+    assert len(text_content) > 0
