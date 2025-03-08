@@ -13,8 +13,15 @@ def extract_file_from_zip(file_path: str, destination_dir: str) -> str:
     Returns:
         str: Path to the extracted binary file
     """
-    # Create the extraction subdirectory
-    extract_subdir = os.path.join(destination_dir, "extracted_dn2prj")
+    # Get the file extension to determine the extraction directory name
+    file_ext = os.path.splitext(file_path)[1].lower()
+
+    # Create the extraction subdirectory based on the file extension
+    if file_ext == ".dn2pst":
+        extract_subdir = os.path.join(destination_dir, "extracted_dn2pst")
+    else:
+        extract_subdir = os.path.join(destination_dir, "extracted_dn2prj")
+
     os.makedirs(extract_subdir, exist_ok=True)
 
     # Get the base name without extension
@@ -30,11 +37,21 @@ def extract_file_from_zip(file_path: str, destination_dir: str) -> str:
         # Extract the zip file
         import zipfile
 
+        binary_name = None
         with zipfile.ZipFile(zip_path, "r") as zip_ref:
+            # Find the binary file (not manifest.json)
+            for info in zip_ref.infolist():
+                if info.filename.lower() != "manifest.json":
+                    binary_name = info.filename
+                    break
             zip_ref.extractall(extract_subdir)
 
         # Return path to the extracted binary file
-        return os.path.join(extract_subdir, base_name)
+        if binary_name:
+            return os.path.join(extract_subdir, binary_name)
+        else:
+            # Fallback to the original behavior
+            return os.path.join(extract_subdir, base_name)
     finally:
         # Clean up the temporary zip file
         os.remove(zip_path)
