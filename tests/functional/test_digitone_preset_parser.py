@@ -1,18 +1,38 @@
 import os
-from dn_deobfuscator.app import parse_digitone_preset
+import shutil
+
+import pytest
+from dn_deobfuscator.app import extract_file_from_zip, parse_digitone_preset
 
 # Path to test data
 TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
-HIDDEN_TEARS_PATH = os.path.join(
-    TEST_DATA_DIR, "extracted-hidden-tears", "HIDDEN TEARS"
-)
+
+# Path of hidden-tears.dn2pst file
+HIDDEN_TEARS_PATH = os.path.join(TEST_DATA_DIR, "hidden-tears.dn2pst")
+
+
+@pytest.fixture(autouse=True)
+def clean_after_test():
+
+    yield
+
+    cleanup_dirs = [
+        os.path.join(TEST_DATA_DIR, "extracted_dn2pst"),
+        os.path.join(TEST_DATA_DIR, "extracted_dn2prj"),
+    ]
+
+    for dir in cleanup_dirs:
+        if os.path.exists(dir):
+            shutil.rmtree(dir)
 
 
 def test_parse_hidden_tears_preset():
     """Test parsing the HIDDEN TEARS preset file and extracting its parameters."""
 
+    text_path, binary_path = extract_file_from_zip(HIDDEN_TEARS_PATH, TEST_DATA_DIR)
+
     # Parse the binary file
-    parameters = parse_digitone_preset(HIDDEN_TEARS_PATH)
+    parameters = parse_digitone_preset(binary_path=binary_path)
 
     # Test all the expected parameters based on the Digitone screen values
 
