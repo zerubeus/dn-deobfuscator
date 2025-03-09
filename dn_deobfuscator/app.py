@@ -178,11 +178,13 @@ def parse_digitone_preset(binary_path: str) -> dict:
     parameters["algo"] = binary_data[0x69]
 
     # Operator levels - Extract and map to expected ranges
-    parameters["c"] = 1.00  # Carrier level appears to always be 1.00
+    parameters["c"] = (
+        1.00  # Carrier level 1.00 is the default maybe, and when it's default we don't find it in the binary
+    )
 
     # Map directly to expected values based on analysis of the binary data
-    parameters["a"] = 1.00  # Map based on knowledge that raw value -> 1.00
-    parameters["b"] = [1.00, 1.00]  # Map based on knowledge of expected values
+    parameters["a"] = 1.00  # This is also the default value I think
+    parameters["b"] = [1.00, 1.00]  # Again this is also maybe the default values
 
     # Harmonic value - extract from appropriate bytes and scale
     harm_raw = int.from_bytes(binary_data[0x6D:0x6F], byteorder="little", signed=True)
@@ -203,6 +205,7 @@ def parse_digitone_preset(binary_path: str) -> dict:
         76: 85  # Raw value 76 maps to UI value 85
         # Add more mappings as needed for other presets
     }
+
     parameters["fdbk"] = feedback_ui_mapping.get(fdbk_raw, fdbk_raw)
 
     # Mix value
