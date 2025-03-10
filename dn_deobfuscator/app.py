@@ -1,7 +1,9 @@
 import os
 import shutil
 import argparse
-import sys
+import json
+import glob
+from typing import List, Dict, Any
 
 
 def extract_file_from_zip(file_path: str, destination_dir: str) -> tuple[str, str]:
@@ -125,11 +127,7 @@ def extract_readable_text_from_binary(binary_path: str) -> str:
         ascii_part = "".join(ascii_chars)
         lines.append(f"{offset}  {hex_part}  |{ascii_part}|")
 
-    # Add header
-    header = "Offset    00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F  |ASCII.............|"
-    separator = "-" * len(header)
-
-    return "\n".join([header, separator] + lines)
+    return "\n".join(lines)
 
 
 def parse_digitone_preset(binary_path: str) -> dict:
@@ -555,54 +553,164 @@ def extract_sysex_patches_to_markdown(
         raise
 
 
+def extract_patches_from_directory(
+    patches_dir: str, destination_dir: str, output_markdown_path: str
+) -> List[Dict[str, Any]]:
+    """
+    Extract all sound patches from a given directory using extract_file_from_zip.
+    Aggregate the results into a markdown file.
+
+    Args:
+        patches_dir: Directory containing .dn2pst files
+        destination_dir: Directory where extracted files should be stored
+        output_markdown_path: Path to the output markdown file
+
+    Returns:
+        List[Dict[str, Any]]: List of patch metadata dictionaries
+    """
+    # Ensure destination directory exists
+    os.makedirs(destination_dir, exist_ok=True)
+
+    # Find all .dn2pst files in the patches_dir
+    patch_files = glob.glob(os.path.join(patches_dir, "*.dn2pst"))
+
+    if not patch_files:
+        print(f"No .dn2pst files found in {patches_dir}")
+        return []
+
+    results = []
+
+    # Process each patch file
+    for patch_file in sorted(patch_files):
+        print(f"Processing {os.path.basename(patch_file)}...")
+
+        # Extract the patch
+        binary_path, text_path = extract_file_from_zip(
+            file_path=patch_file, destination_dir=destination_dir
+        )
+
+        # Get base name for the patch (without extension)
+        base_name = os.path.splitext(os.path.basename(patch_file))[0]
+
+        # Path to the extracted directory
+        extract_subdir = os.path.join(destination_dir, "extracted_dn2pst")
+
+        # Get text content for the patch
+        with open(text_path, "r") as f:
+            text_content = f.read()
+
+        # Get manifest.json content for the patch metadata
+        manifest_path = os.path.join(extract_subdir, "manifest.json")
+
+        # Initialize metadata
+        patch_metadata = {
+            "name": base_name,
+            "tags": [],
+            "binary_content": text_content,
+            "binary_path": binary_path,
+            "text_path": text_path,
+        }
+
+        # Parse manifest.json if it exists
+        if os.path.exists(manifest_path):
+            try:
+                with open(manifest_path, "r") as f:
+                    manifest_data = json.load(f)
+
+                # Extract tags from metadata
+                if "MetaInfo" in manifest_data and "Tags" in manifest_data["MetaInfo"]:
+                    patch_metadata["tags"] = manifest_data["MetaInfo"]["Tags"]
+            except (json.JSONDecodeError, IOError) as e:
+                print(f"Error reading manifest for {base_name}: {str(e)}")
+
+        results.append(patch_metadata)
+
+    # Generate the markdown file
+    write_patches_to_markdown(results, output_markdown_path)
+
+    return results
+
+
+def write_patches_to_markdown(patches: List[Dict[str, Any]], output_path: str) -> None:
+    """
+    Write the patch data to a markdown file.
+
+    Args:
+        patches: List of patch metadata dictionaries
+        output_path: Path to the output markdown file
+    """
+    with open(output_path, "w") as f:
+        for patch in patches:
+            # Write patch name
+            f.write(f"- patch name: {patch['name']}\n")
+
+            # Write patch tags
+            tags_str = ", ".join(patch["tags"]) if patch["tags"] else "none"
+            f.write(f"- patch tags: {tags_str}\n")
+
+            # Write patch binary content
+            f.write("- patch binary:\n\n")
+            f.write(f"{patch['binary_content']}\n\n")
+
+            # Add separator between patches
+            f.write("-" * 80 + "\n\n")
+
+
 def main():
     parser = argparse.ArgumentParser(
-        description="Extract files from .dn2prj, .dn2pst, or .syx files"
+        description="Extract and parse Digitone project and sound files"
+    )
+
+    # Existing arguments
+    parser.add_argument("--file", help="Path to the .dn2prj or .dn2pst file")
+    parser.add_argument(
+        "--output", default=".", help="Output directory (default: current directory)"
     )
     parser.add_argument(
-        "file_path", help="Path to the file to extract (.dn2prj, .dn2pst, or .syx)"
+        "--sysex", help="Path to the .syx file containing Digitone patches"
     )
     parser.add_argument(
-        "-d",
-        "--destination",
-        default=".",
-        help="Destination directory for extracted files (default: current directory)",
+        "--md", help="Path to output markdown file for sysex extraction"
+    )
+
+    # New arguments for the directory extraction feature
+    parser.add_argument(
+        "--patches-dir", help="Directory containing .dn2pst patch files"
     )
     parser.add_argument(
-        "-s",
-        "--sysex",
-        action="store_true",
-        help="Process file as SysEx format and extract to markdown",
+        "--output-md", help="Path to output markdown file for batch extraction"
     )
-    parser.add_argument(
-        "-a",
-        "--append",
-        action="store_true",
-        help="Append to output file instead of overwriting (only for SysEx extraction)",
-    )
+
     args = parser.parse_args()
 
-    try:
-        if args.sysex:
-            # For SysEx files, create markdown in the destination directory
-            output_md = os.path.join(
-                args.destination,
-                os.path.splitext(os.path.basename(args.file_path))[0] + "_patches.md",
-            )
-            extract_sysex_patches_to_markdown(
-                args.file_path, output_md, append=args.append
-            )
-            print(f"Successfully extracted SysEx patches to: {output_md}")
-        else:
-            # Original .dn2prj/.dn2pst extraction
-            extracted_path, text_path = extract_file_from_zip(
-                args.file_path, args.destination
-            )
-            print(f"Successfully extracted file to: {extracted_path}")
-            print(f"Text file saved to: {text_path}")
-    except Exception as e:
-        print(f"Error extracting file: {e}", file=sys.stderr)
-        sys.exit(1)
+    # Existing code handling file or sysex extraction
+    if args.file:
+        destination_dir = args.output or "."
+        binary_path, text_path = extract_file_from_zip(args.file, destination_dir)
+        print(f"Binary file extracted to: {binary_path}")
+        print(f"Text file generated at: {text_path}")
+
+        # Parse the binary based on the file extension
+        if args.file.lower().endswith(".dn2pst"):
+            parameters = parse_digitone_preset(binary_path)
+            print(f"Parsed parameters: {parameters}")
+
+    elif args.sysex and args.md:
+        extract_sysex_patches_to_markdown(args.sysex, args.md)
+
+    # New code for directory extraction
+    elif args.patches_dir and args.output_md:
+        output_dir = args.output or "."
+        extract_patches_from_directory(
+            patches_dir=args.patches_dir,
+            destination_dir=output_dir,
+            output_markdown_path=args.output_md,
+        )
+        print(f"Extracted patches to {output_dir}")
+        print(f"Generated markdown summary at {args.output_md}")
+
+    else:
+        parser.print_help()
 
 
 if __name__ == "__main__":

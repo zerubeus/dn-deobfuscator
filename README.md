@@ -18,22 +18,29 @@ python -m dn_deobfuscator.app <file_path>
 
 This will extract the contents of a `.dn2prj` or `.dn2pst` file to the current directory.
 
+You can also extract all patches from a directory containing multiple `.dn2pst` files:
+
+```bash
+python -m dn_deobfuscator.app --patches-dir <directory_with_patches> --output-md <output_markdown_file>
+```
+
+This will process all `.dn2pst` files in the specified directory, extract their binary data, and create a consolidated markdown file with patches' names, tags, and hex dumps.
+
 ### Command-line Options
 
 ```
-usage: app.py [-h] [-d DESTINATION] [-s] [-a] file_path
+usage: app.py [-h] [--file FILE] [--output OUTPUT] [--sysex SYSEX] [--md MD] [--patches-dir PATCHES_DIR] [--output-md OUTPUT_MD]
 ```
-
-#### Positional Arguments:
-
-- `file_path` - Path to the file to extract (.dn2prj, .dn2pst, or .syx)
 
 #### Optional Arguments:
 
 - `-h, --help` - Show the help message and exit
-- `-d DESTINATION, --destination DESTINATION` - Destination directory for extracted files (default: current directory)
-- `-s, --sysex` - Process file as SysEx format and extract to markdown
-- `-a, --append` - Append to output file instead of overwriting (only for SysEx extraction)
+- `--file` - Path to the file to extract (.dn2prj or .dn2pst)
+- `--output` - Destination directory for extracted files (default: current directory)
+- `--sysex` - Path to the .syx file containing Digitone patches
+- `--md` - Path to output markdown file for sysex extraction
+- `--patches-dir` - Directory containing .dn2pst patch files
+- `--output-md` - Path to output markdown file for batch extraction
 
 ### Examples
 
@@ -79,6 +86,27 @@ python -m dn_deobfuscator.app path/to/patches.syx -s -d output_folder
 ```
 
 This will create the markdown file in the specified output folder.
+
+#### Batch extract multiple patch files from a directory:
+
+```bash
+python -m dn_deobfuscator.app --patches-dir data/dn2_patches --output-md patches_summary.md
+```
+
+This will:
+
+1. Process all `.dn2pst` files in the `data/dn2_patches` directory
+2. Extract each patch's binary file, text representation, and metadata (name and tags)
+3. Generate a consolidated markdown file (`patches_summary.md`) with all patches in the following format:
+
+   ```
+   - patch name: <patch_name>
+   - patch tags: <tag1>, <tag2>, <tag3>
+   - patch binary:
+
+   00000000  ac 11 d3 03 02 00 05 00  0f 30 30 32 38 00 00 00  |.........0028...|
+   ...
+   ```
 
 ## Progress on Digitone 2 Preset Reverse Engineering
 
