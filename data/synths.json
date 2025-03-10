@@ -1,0 +1,677 @@
+{
+  "fmdrum": {
+    "syn": {
+      "syn_type": "FM DRUM",
+      "page_1": {
+        "tune": "",
+        "stim": "",
+        "sdep": "",
+        "algo": "",
+        "OP.C": "",
+        "OP.AB": "",
+        "FDBK": "",
+        "FOLD": ""
+      },
+      "page_2": {
+        "DEC1": "",
+        "END1": "",
+        "RATIO1": "",
+        "MOD1": "",
+        "DEC2": "",
+        "END2": "",
+        "RATIO2": "",
+        "MOD2": ""
+      },
+      "page_3": {
+        "HOLD": "",
+        "DEC": "",
+        "PH.C": "",
+        "LEV": "",
+        "NRST": "",
+        "NRM": ""
+      },
+      "page_4": {
+        "NHLD": "",
+        "NDEC": "",
+        "TRAN": "",
+        "TLEV": "",
+        "BASE": "",
+        "WDTH": "",
+        "GRAN": "",
+        "NLEV": ""
+      }
+    },
+    "filter_page": {
+      "page_1": {
+        "Filter_Type": [
+          "Multi-mode",
+          "Lowpass",
+          "Legacy LP/HP",
+          "Comb-",
+          "Comb+",
+          "Equalizer"
+        ],
+        "parameters": {
+          "Multi-mode": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "RESO": "",
+            "TYPE": "",
+            "ENV": ""
+          },
+          "Lowpass": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "RESO": "",
+            "ENV": ""
+          },
+          "Legacy LP/HP": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "RESO": "",
+            "TYPE": ["Lowpass", "Highpass"],
+            "ENV": ""
+          },
+          "Comb-": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "FDBK": "",
+            "LPF": "",
+            "ENV": ""
+          },
+          "Comb+": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "FDBK": "",
+            "LPF": "",
+            "ENV": ""
+          },
+          "Equalizer": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "GAIN": "",
+            "Q": "",
+            "ENV": ""
+          }
+        }
+      },
+      "page_2": {
+        "BASE": "",
+        "WDTH": "",
+        "ENV.D": "",
+        "KEY.T": "",
+        "BW.RT": ["Pre", "Post"],
+        "F.RST": ""
+      }
+    },
+    "amp_page": {
+      "ATK": "",
+      "DEC": "",
+      "SUS": "",
+      "REL": "",
+      "RSET": "",
+      "MODE": "",
+      "PAN": "",
+      "VOL": ""
+    },
+    "fx_page": {
+      "BR": "",
+      "OVER": "",
+      "SRR": "",
+      "SR.RT": ["Pre", "Post"],
+      "DEL": "",
+      "REV": "",
+      "CHR": "",
+      "OD.RT": ["Pre", "Post"]
+    },
+    "lfo": {
+      "lfo_1": {
+        "SPD": "",
+        "MULT": "",
+        "FADE": "",
+        "DEST": "",
+        "WAVE": "",
+        "SPH": "",
+        "MODE": "",
+        "DEP": ""
+      },
+      "lfo_2": {
+        "SPD": "",
+        "MULT": "",
+        "FADE": "",
+        "DEST": "",
+        "WAVE": "",
+        "SPH": "",
+        "MODE": "",
+        "DEP": ""
+      },
+      "lfo_3": {
+        "SPD": "",
+        "MULT": "",
+        "FADE": "",
+        "DEST": "",
+        "WAVE": "",
+        "SPH": "",
+        "MODE": "",
+        "DEP": ""
+      }
+    }
+  },
+  "fmtone": {
+    "syn": {
+      "syn_type": "FM TONE",
+      "page_1": {
+        "ALGO": "",
+        "C": "",
+        "A": "",
+        "B": ["", ""],
+        "HARM": "",
+        "DTUN": "",
+        "FDBK": "",
+        "MIX": ""
+      },
+      "page_2": {
+        "A": {
+          "atk": "",
+          "dec": "",
+          "end": "",
+          "lev": ""
+        },
+        "B": {
+          "atk": "",
+          "dec": "",
+          "end": "",
+          "lev": ""
+        }
+      },
+      "page_3": {
+        "ADEL": "",
+        "ATRG": "",
+        "ARST": "",
+        "PHRT": "",
+        "BDEL": "",
+        "BTRG": "",
+        "BRST": ""
+      },
+      "page_4": {
+        "Ratio_Offset": {
+          "C": "",
+          "A": "",
+          "B1": "",
+          "B2": ""
+        },
+        "Key_Track": {
+          "A": "",
+          "B1": "",
+          "B2": ""
+        }
+      }
+    },
+    "filter_page": {
+      "page_1": {
+        "Filter_Type": [
+          "Multi-mode",
+          "Lowpass",
+          "Legacy LP/HP",
+          "Comb-",
+          "Comb+",
+          "Equalizer"
+        ],
+        "parameters": {
+          "Multi-mode": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "RESO": "",
+            "TYPE": "",
+            "ENV": ""
+          },
+          "Lowpass": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "RESO": "",
+            "ENV": ""
+          },
+          "Legacy LP/HP": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "RESO": "",
+            "TYPE": ["Lowpass", "Highpass"],
+            "ENV": ""
+          },
+          "Comb-": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "FDBK": "",
+            "LPF": "",
+            "ENV": ""
+          },
+          "Comb+": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "FDBK": "",
+            "LPF": "",
+            "ENV": ""
+          },
+          "Equalizer": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "GAIN": "",
+            "Q": "",
+            "ENV": ""
+          }
+        }
+      },
+      "page_2": {
+        "BASE": "",
+        "WDTH": "",
+        "ENV.D": "",
+        "KEY.T": "",
+        "BW.RT": ["Pre", "Post"],
+        "F.RST": ""
+      }
+    },
+    "amp_page": {
+      "ATK": "",
+      "DEC": "",
+      "SUS": "",
+      "REL": "",
+      "RSET": "",
+      "MODE": "",
+      "PAN": "",
+      "VOL": ""
+    },
+    "fx_page": {
+      "BR": "",
+      "OVER": "",
+      "SRR": "",
+      "SR.RT": ["Pre", "Post"],
+      "DEL": "",
+      "REV": "",
+      "CHR": "",
+      "OD.RT": ["Pre", "Post"]
+    },
+    "lfo": {
+      "lfo_1": {
+        "SPD": "",
+        "MULT": "",
+        "FADE": "",
+        "DEST": "",
+        "WAVE": "",
+        "SPH": "",
+        "MODE": "",
+        "DEP": ""
+      },
+      "lfo_2": {
+        "SPD": "",
+        "MULT": "",
+        "FADE": "",
+        "DEST": "",
+        "WAVE": "",
+        "SPH": "",
+        "MODE": "",
+        "DEP": ""
+      },
+      "lfo_3": {
+        "SPD": "",
+        "MULT": "",
+        "FADE": "",
+        "DEST": "",
+        "WAVE": "",
+        "SPH": "",
+        "MODE": "",
+        "DEP": ""
+      }
+    }
+  },
+  "swarmer": {
+    "syn": {
+      "syn_type": "SWARMER",
+      "page_1": {
+        "TUNE": "",
+        "SWRM": "",
+        "DET": "",
+        "MIX": "",
+        "M.OCT": "",
+        "MAIN": "",
+        "ANIM": "",
+        "N.MOD": ""
+      }
+    },
+    "filter_page": {
+      "page_1": {
+        "Filter_Type": [
+          "Multi-mode",
+          "Lowpass",
+          "Legacy LP/HP",
+          "Comb-",
+          "Comb+",
+          "Equalizer"
+        ],
+        "parameters": {
+          "Multi-mode": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "RESO": "",
+            "TYPE": "",
+            "ENV": ""
+          },
+          "Lowpass": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "RESO": "",
+            "ENV": ""
+          },
+          "Legacy LP/HP": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "RESO": "",
+            "TYPE": ["Lowpass", "Highpass"],
+            "ENV": ""
+          },
+          "Comb-": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "FDBK": "",
+            "LPF": "",
+            "ENV": ""
+          },
+          "Comb+": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "FDBK": "",
+            "LPF": "",
+            "ENV": ""
+          },
+          "Equalizer": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "GAIN": "",
+            "Q": "",
+            "ENV": ""
+          }
+        }
+      },
+      "page_2": {
+        "BASE": "",
+        "WDTH": "",
+        "ENV.D": "",
+        "KEY.T": "",
+        "BW.RT": ["Pre", "Post"],
+        "F.RST": ""
+      }
+    },
+    "amp_page": {
+      "ATK": "",
+      "DEC": "",
+      "SUS": "",
+      "REL": "",
+      "RSET": "",
+      "MODE": "",
+      "PAN": "",
+      "VOL": ""
+    },
+    "fx_page": {
+      "BR": "",
+      "OVER": "",
+      "SRR": "",
+      "SR.RT": ["Pre", "Post"],
+      "DEL": "",
+      "REV": "",
+      "CHR": "",
+      "OD.RT": ["Pre", "Post"]
+    },
+    "lfo": {
+      "lfo_1": {
+        "SPD": "",
+        "MULT": "",
+        "FADE": "",
+        "DEST": "",
+        "WAVE": "",
+        "SPH": "",
+        "MODE": "",
+        "DEP": ""
+      },
+      "lfo_2": {
+        "SPD": "",
+        "MULT": "",
+        "FADE": "",
+        "DEST": "",
+        "WAVE": "",
+        "SPH": "",
+        "MODE": "",
+        "DEP": ""
+      },
+      "lfo_3": {
+        "SPD": "",
+        "MULT": "",
+        "FADE": "",
+        "DEST": "",
+        "WAVE": "",
+        "SPH": "",
+        "MODE": "",
+        "DEP": ""
+      }
+    }
+  },
+  "wavetone": {
+    "syn": {
+      "syn_type": "WAVETONE",
+      "page_1": {
+        "TUN1": "",
+        "WAV1": "",
+        "PD1": "",
+        "LEV1": "",
+        "TUN2": "",
+        "WAV2": "",
+        "PD2": "",
+        "LEV2": ""
+      },
+      "page_2": {
+        "OFS1": "",
+        "TBL1": "",
+        "MOD": "",
+        "RSET": "",
+        "OFS2": "",
+        "TBL2": "",
+        "DRIF": ""
+      },
+      "page_3": {
+        "ATK": "",
+        "HOLD": "",
+        "DEC": "",
+        "NLEV": "",
+        "BASE": "",
+        "WDTH": "",
+        "TYPE": "",
+        "CHAR": ""
+      }
+    },
+    "filter_page": {
+      "page_1": {
+        "Filter_Type": [
+          "Multi-mode",
+          "Lowpass",
+          "Legacy LP/HP",
+          "Comb-",
+          "Comb+",
+          "Equalizer"
+        ],
+        "parameters": {
+          "Multi-mode": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "RESO": "",
+            "TYPE": "",
+            "ENV": ""
+          },
+          "Lowpass": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "RESO": "",
+            "ENV": ""
+          },
+          "Legacy LP/HP": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "RESO": "",
+            "TYPE": ["Lowpass", "Highpass"],
+            "ENV": ""
+          },
+          "Comb-": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "FDBK": "",
+            "LPF": "",
+            "ENV": ""
+          },
+          "Comb+": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "FDBK": "",
+            "LPF": "",
+            "ENV": ""
+          },
+          "Equalizer": {
+            "ATK": "",
+            "DEC": "",
+            "SUS": "",
+            "REL": "",
+            "FREQ": "",
+            "GAIN": "",
+            "Q": "",
+            "ENV": ""
+          }
+        }
+      },
+      "page_2": {
+        "BASE": "",
+        "WDTH": "",
+        "ENV.D": "",
+        "KEY.T": "",
+        "BW.RT": ["Pre", "Post"],
+        "F.RST": ""
+      }
+    },
+    "amp_page": {
+      "ATK": "",
+      "DEC": "",
+      "SUS": "",
+      "REL": "",
+      "RSET": "",
+      "MODE": "",
+      "PAN": "",
+      "VOL": ""
+    },
+    "fx_page": {
+      "BR": "",
+      "OVER": "",
+      "SRR": "",
+      "SR.RT": ["Pre", "Post"],
+      "DEL": "",
+      "REV": "",
+      "CHR": "",
+      "OD.RT": ["Pre", "Post"]
+    },
+    "lfo": {
+      "lfo_1": {
+        "SPD": "",
+        "MULT": "",
+        "FADE": "",
+        "DEST": "",
+        "WAVE": "",
+        "SPH": "",
+        "MODE": "",
+        "DEP": ""
+      },
+      "lfo_2": {
+        "SPD": "",
+        "MULT": "",
+        "FADE": "",
+        "DEST": "",
+        "WAVE": "",
+        "SPH": "",
+        "MODE": "",
+        "DEP": ""
+      },
+      "lfo_3": {
+        "SPD": "",
+        "MULT": "",
+        "FADE": "",
+        "DEST": "",
+        "WAVE": "",
+        "SPH": "",
+        "MODE": "",
+        "DEP": ""
+      }
+    }
+  }
+}
