@@ -2,6 +2,8 @@ import logging
 import pytest
 import colorlog
 
+from pathlib import Path
+
 
 def pytest_configure():
     handler = colorlog.StreamHandler()
@@ -23,3 +25,13 @@ def pytest_configure():
 @pytest.fixture(autouse=True)
 def setup_logging(caplog):
     caplog.set_level(logging.INFO)
+
+
+@pytest.fixture(scope="session")
+def root_dir():
+    return Path(__file__).parent.parent
+
+
+@pytest.fixture(scope="session")
+def data_dir(root_dir):
+    return root_dir / "data"
