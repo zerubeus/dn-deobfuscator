@@ -4,9 +4,81 @@ reverse engineering tool for dn2prj project files and dn2pst preset files
 
 ## Usage
 
+The `dn-deobfuscator` tool can work with multiple file types:
+
+- Elektron Digitone project files (`.dn2prj`)
+- Elektron Digitone preset files (`.dn2pst`)
+- SysEx files (`.syx`) with sounds/patches
+
+### Basic Usage
+
 ```bash
-python -m dn_deobfuscator.app
+python -m dn_deobfuscator.app <file_path>
 ```
+
+This will extract the contents of a `.dn2prj` or `.dn2pst` file to the current directory.
+
+### Command-line Options
+
+```
+usage: app.py [-h] [-d DESTINATION] [-s] [-a] file_path
+```
+
+#### Positional Arguments:
+
+- `file_path` - Path to the file to extract (.dn2prj, .dn2pst, or .syx)
+
+#### Optional Arguments:
+
+- `-h, --help` - Show the help message and exit
+- `-d DESTINATION, --destination DESTINATION` - Destination directory for extracted files (default: current directory)
+- `-s, --sysex` - Process file as SysEx format and extract to markdown
+- `-a, --append` - Append to output file instead of overwriting (only for SysEx extraction)
+
+### Examples
+
+#### Extract a Digitone project or preset file:
+
+```bash
+python -m dn_deobfuscator.app path/to/mysound.dn2pst
+```
+
+This will extract the binary data and create a text representation in the current directory.
+
+#### Extract a Digitone project to a specific directory:
+
+```bash
+python -m dn_deobfuscator.app path/to/myproject.dn2prj -d output_folder
+```
+
+#### Extract SysEx patches to a markdown file:
+
+```bash
+python -m dn_deobfuscator.app path/to/patches.syx -s
+```
+
+This will create a markdown file named `patches.syx_patches.md` in the current directory, containing all patches found in the SysEx file. Each patch will include:
+
+- Patch name with prefix (e.g., "BD. KICK", "CY. CRASH")
+- Patch tags
+- Hex dump of the patch binary data
+
+#### Extract multiple SysEx files to the same markdown file:
+
+```bash
+python -m dn_deobfuscator.app path/to/first.syx -s
+python -m dn_deobfuscator.app path/to/second.syx -s -a
+```
+
+The `-a` (append) option allows you to add patches from multiple SysEx files to the same markdown document.
+
+#### Extract SysEx to a specific directory:
+
+```bash
+python -m dn_deobfuscator.app path/to/patches.syx -s -d output_folder
+```
+
+This will create the markdown file in the specified output folder.
 
 ## Progress on Digitone 2 Preset Reverse Engineering
 
